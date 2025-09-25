@@ -56,7 +56,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -156,7 +157,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"origin\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"owner\",\"type\":\"string\"}],\"name\":\"ProduceAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"newOwner\",\"type\":\"string\"}],\"name\":\"ProduceTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_origin\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_quality\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_harvestDate\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_owner\",\"type\":\"string\"}],\"name\":\"addProduce\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getProduce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"origin\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"quality\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"harvestDate\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"owner\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"produceCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_newOwner\",\"type\":\"string\"}],\"name\":\"transferProduce\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/AgriProduce.sol\":\"AgriProduce\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/AgriProduce.sol\":{\"keccak256\":\"0xede7b05cfaf68568a98e5a3269626d3255693d8aa246a99b19404d11053dfe3c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4efb939d117e20613510f738200940fcb116f9dc8c1504b87615cb9b9205c679\",\"dweb:/ipfs/QmeV1ivgbU2YEXJNHQtt5a6Bqu7xh5vgNTvepoHJqH2492\"]}},\"version\":1}",
@@ -7718,10 +7720,17 @@
       "links": {},
       "address": "0xe38F5F38Bd521Ab0010bb9C0c38f418aBAc9AaA8",
       "transactionHash": "0x2f704912ac3688dcd3f5b9ead201a36275ba0c9274bab38700a24c464867687e"
+    },
+    "1758836162419": {
+      "events": {},
+      "links": {},
+      "address": "0xF9B4E3edB2B872f2e23c2e71b886d48cA6104c01",
+      "transactionHash": "0x1623863c4e4e7457dfca36e3bb90d1796eff9be1e779f0962f1f5fc97c03547f"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2025-09-25T21:22:15.658Z",
+  "updatedAt": "2025-09-25T21:57:58.763Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},
