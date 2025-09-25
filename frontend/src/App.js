@@ -1,67 +1,81 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, AuthContext } from './contexts/AuthContext';
+import Sidebar from './components/Sidebar';
+import ProtectedRoute from './routes/ProtectedRoute';
+
+import Login from './components/Login';
+import Register from './components/Register';
+import Unauthorized from './components/Unauthorized';
+
 import FarmerDashboard from './components/FarmerDashboard';
 import DistributorDashboard from './components/DistributorDashboard';
 import RetailerDashboard from './components/RetailerDashboard';
 import ConsumerDashboard from './components/ConsumerDashboard';
-import QRScanner from './components/QRScanner';
-import Unauthorized from './components/Unauthorized';
-import ProtectedRoute from './routes/ProtectedRoute';
-import Login from './components/Login';
-import Register from './components/Register';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-function App() {
-  const [role, setRole] = useState(localStorage.getItem('role'));
-  const [showLogin, setShowLogin] = useState(true);
+const AppRoutes = () => {
+  const { userRole } = useContext(AuthContext);
 
-  const toggleLoginRegister = () => setShowLogin(!showLogin);
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    setRole(null);
-    setShowLogin(true);
-  };
-
-  if (!role) {
-    return showLogin ? (
-      <Login setRole={setRole} switchToRegister={toggleLoginRegister} />
-    ) : (
-      <Register switchToLogin={toggleLoginRegister} />
+  if (!userRole) {
+    return (
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
     );
   }
 
   return (
-    <Router>
-      <div>
-        <button onClick={handleLogout}>Logout</button>
+    <>
+      <Sidebar />
+      <Routes>
+        <Route 
+          path="/farmer" 
+          element={
+            <ProtectedRoute allowedRoles={['farmer']}>
+              <FarmerDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/distributor" 
+          element={
+            <ProtectedRoute allowedRoles={['distributor']}>
+              <DistributorDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/retailer" 
+          element={
+            <ProtectedRoute allowedRoles={['retailer']}>
+              <RetailerDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/consumer" 
+          element={
+            <ProtectedRoute allowedRoles={['consumer']}>
+              <ConsumerDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="*" element={<Navigate to={`/${userRole}`} />} />
+      </Routes>
+    </>
+  );
+};
 
-        <Routes>
-          <Route path="/unauthorized" element={<Unauthorized />} />
-
-          <Route element={<ProtectedRoute role="farmer" userRole={role} />}>
-            <Route path="/farmer" element={<FarmerDashboard />} />
-          </Route>
-
-          <Route element={<ProtectedRoute role="distributor" userRole={role} />}>
-            <Route path="/distributor" element={<DistributorDashboard />} />
-          </Route>
-
-          <Route element={<ProtectedRoute role="retailer" userRole={role} />}>
-            <Route path="/retailer" element={<RetailerDashboard />} />
-          </Route>
-
-          <Route element={<ProtectedRoute role="consumer" userRole={role} />}>
-            <Route path="/consumer" element={<ConsumerDashboard />} />
-          </Route>
-
-          {/* Default redirect */}
-          <Route path="*" element={<Navigate to={`/${role}`} />} />
-        </Routes>
-
-        <QRScanner />
-      </div>
-    </Router>
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <AppRoutes />
+      </Router>
+    </AuthProvider>
   );
 }
 

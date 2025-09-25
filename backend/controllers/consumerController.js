@@ -1,16 +1,19 @@
 const Produce = require('../models/Produce');
-const generateSustainabilityScore = require('../utils/sustainabilityScore');
+const initBlockchain = require('../blockchain/blockchain');
 
 exports.getProduceDetails = async (req, res) => {
+  try {
     const produceId = req.params.id;
 
-    try {
-        const produce = await Produce.findById(produceId);
-        if (!produce) return res.status(404).json({ error: "Produce not found" });
+    const produce = await Produce.findById(produceId);
+    if (!produce) return res.status(404).json({ error: "Produce not found" });
 
-        const sustainabilityScore = generateSustainabilityScore();
-        res.json({ produce, sustainabilityScore });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    const { web3, contract } = await initBlockchain();
+    const blockchainData = await contract.methods.getProduce(produceId).call();
+
+    res.json({ produce, blockchainData });
+  } catch (error) {
+    console.error('Get produce details error:', error);
+    res.status(500).json({ error: "Server error while getting produce details" });
+  }
 };

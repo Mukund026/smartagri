@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 import { loginUser } from '../services/api';
 
-const Login = ({ setRole, switchToRegister }) => {
+const Login = () => {
+  const { login } = useContext(AuthContext);
   const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = e => setForm({...form, [e.target.name]: e.target.value });
 
-  const handleLogin = async () => {
+  const handleSubmit = async e => {
+    e.preventDefault();
     setError('');
     try {
       const res = await loginUser(form);
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('role', res.data.role);
-      setRole(res.data.role);
+      login(res.data.role, res.data.token);
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed');
     }
@@ -24,29 +23,12 @@ const Login = ({ setRole, switchToRegister }) => {
   return (
     <div>
       <h2>Login</h2>
-      <input
-        placeholder="Username"
-        name="username"
-        value={form.username}
-        onChange={handleChange}
-        required
-      />
-      <input
-        placeholder="Password"
-        name="password"
-        type="password"
-        value={form.password}
-        onChange={handleChange}
-        required
-      />
-      <button onClick={handleLogin}>Login</button>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      <p>
-        Don't have an account?{' '}
-        <button onClick={switchToRegister}>Register here</button>
-      </p>
+      <form onSubmit={handleSubmit}>
+        <input name="username" value={form.username} onChange={handleChange} placeholder="Username" required />
+        <input type="password" name="password" value={form.password} onChange={handleChange} placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
+      {error && <p style={{color:'red'}}>{error}</p>}
     </div>
   );
 };
