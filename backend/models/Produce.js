@@ -1,3 +1,4 @@
+// backend/models/Produce.js
 const mongoose = require('mongoose');
 
 const produceSchema = new mongoose.Schema({
@@ -7,7 +8,7 @@ const produceSchema = new mongoose.Schema({
     harvestDate: String,
     owner: String,
     qrCode: String,
-    timestamps: [{ status: String, time: Date }]
+    timestamps: [{ status: String, time: Date }],
 });
 
 module.exports = mongoose.model('Produce', produceSchema);

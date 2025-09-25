@@ -2,13 +2,27 @@ import axios from 'axios';
 
 const API_URL = "http://localhost:5000/api";
 
-export const registerUser = (data) => axios.post(`${API_URL}/auth/register`, data);
-export const loginUser = (data) => axios.post(`${API_URL}/auth/login`, data);
+const api = axios.create({
+  baseURL: API_URL,
+});
 
-export const addProduce = (data) => axios.post(`${API_URL}/farmer/add`, data);
-export const getProduces = () => axios.get(`${API_URL}/farmer/produces`);
+api.interceptors.request.use(config => {
+  const token = localStorage.getItem('token');
+  if(token) {
+    config.headers['Authorization'] = 'Bearer ' + token;
+  }
+  return config;
+});
 
-export const transferProduce = (data) => axios.post(`${API_URL}/distributor/transfer`, data);
-export const updateStock = (data) => axios.post(`${API_URL}/retailer/updateStock`, data);
+export const registerUser = (data) => api.post('/auth/register', data);
+export const loginUser = (data) => api.post('/auth/login', data);
 
-export const getProduceDetails = (id) => axios.get(`${API_URL}/consumer/${id}`);
+export const addProduce = (data) => api.post('/farmer/add', data);
+export const getProduces = () => api.get('/farmer/produces');
+
+export const transferProduce = (data) => api.post('/distributor/transfer', data);
+export const updateStock = (data) => api.post('/retailer/updateStock', data);
+
+export const getProduceDetails = (id) => api.get(`/consumer/${id}`);
+
+export default api;

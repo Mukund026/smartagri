@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.0;
 
 contract AgriProduce {
     struct Produce {
@@ -37,13 +37,7 @@ contract AgriProduce {
     }
 
     function getProduce(uint _id) public view returns (
-        uint,
-        string memory,
-        string memory,
-        uint,
-        string memory,
-        string memory,
-        uint
+        uint, string memory, string memory, uint, string memory, string memory, uint
     ) {
         Produce memory p = produces[_id];
         return (p.id, p.origin, p.quality, p.quantity, p.harvestDate, p.owner, p.timestamp);

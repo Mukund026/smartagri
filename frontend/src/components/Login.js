@@ -1,46 +1,54 @@
 import React, { useState } from 'react';
-import { loginUser, registerUser } from '../services/api';
+import { loginUser } from '../services/api';
 
-const Login = ({ setRole }) => {
-    const [isRegister, setIsRegister] = useState(false);
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [roleInput, setRoleInput] = useState('farmer');
+const Login = ({ setRole, switchToRegister }) => {
+  const [form, setForm] = useState({ username: '', password: '' });
+  const [error, setError] = useState('');
 
-    const handleSubmit = async () => {
-        try {
-            if (isRegister) {
-                await registerUser({ username, password, role: roleInput });
-                alert("Registration successful! Please login.");
-                setIsRegister(false);
-            } else {
-                const res = await loginUser({ username, password });
-                setRole(res.data.role);
-            }
-        } catch (err) {
-            alert(err.response?.data?.error || "Action failed");
-        }
-    };
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-    return (
-        <div>
-            <h2>{isRegister ? "Register" : "Login"}</h2>
-            <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            {isRegister && (
-                <select value={roleInput} onChange={(e) => setRoleInput(e.target.value)}>
-                    <option value="farmer">Farmer</option>
-                    <option value="distributor">Distributor</option>
-                    <option value="retailer">Retailer</option>
-                    <option value="consumer">Consumer</option>
-                </select>
-            )}
-            <button onClick={handleSubmit}>{isRegister ? "Register" : "Login"}</button>
-            <button onClick={() => setIsRegister(!isRegister)}>
-                {isRegister ? "Already have an account? Login" : "New user? Register"}
-            </button>
-        </div>
-    );
+  const handleLogin = async () => {
+    setError('');
+    try {
+      const res = await loginUser(form);
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('role', res.data.role);
+      setRole(res.data.role);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Login failed');
+    }
+  };
+
+  return (
+    <div>
+      <h2>Login</h2>
+      <input
+        placeholder="Username"
+        name="username"
+        value={form.username}
+        onChange={handleChange}
+        required
+      />
+      <input
+        placeholder="Password"
+        name="password"
+        type="password"
+        value={form.password}
+        onChange={handleChange}
+        required
+      />
+      <button onClick={handleLogin}>Login</button>
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <p>
+        Don't have an account?{' '}
+        <button onClick={switchToRegister}>Register here</button>
+      </p>
+    </div>
+  );
 };
 
 export default Login;
