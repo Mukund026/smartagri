@@ -1,23 +1,39 @@
-import React, { useState } from 'react';
-import { updateStock } from '../services/api';
+import React, { useState, useEffect } from 'react';
+import { initWeb3, getContract } from '../utils/blockchain';
 
 const RetailerDashboard = () => {
   const [produceId, setProduceId] = useState('');
-  const [stock, setStock] = useState('');
-  const [price, setPrice] = useState('');
+  const [produce, setProduce] = useState(null);
 
-  const handleUpdateStock = async () => {
-    await updateStock({ produceId, stock, price });
-    alert("Stock updated successfully");
+  useEffect(() => {
+    initWeb3();
+  }, []);
+
+  const handleGetProduce = async () => {
+    try {
+      const contract = await getContract();
+      const data = await contract.methods.getProduce(produceId).call();
+      setProduce(data);
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
   };
 
   return (
     <div>
       <h2>Retailer Dashboard</h2>
-      <input placeholder="Produce ID" value={produceId} onChange={e => setProduceId(e.target.value)} />
-      <input placeholder="Stock" value={stock} onChange={e => setStock(e.target.value)} />
-      <input placeholder="Price" value={price} onChange={e => setPrice(e.target.value)} />
-      <button onClick={handleUpdateStock}>Update Stock</button>
+      <input type="text" placeholder="Produce ID" onChange={e => setProduceId(e.target.value)} />
+      <button onClick={handleGetProduce}>Get Produce Details</button>
+      {produce && (
+        <div>
+          <p>Origin: {produce.origin}</p>
+          <p>Quality: {produce.quality}</p>
+          <p>Quantity: {produce.quantity}</p>
+          <p>Harvest Date: {produce.harvestDate}</p>
+          <p>Owner: {produce.owner}</p>
+          <p>Timestamp: {new Date(produce.timestamp * 1000).toLocaleString()}</p>
+        </div>
+      )}
     </div>
   );
 };

@@ -5,10 +5,10 @@ let web3;
 let contract;
 
 export const initWeb3 = async () => {
-  if (window.ethereum) {
+  if(window.ethereum) {
     web3 = new Web3(window.ethereum);
-    await window.ethereum.enable();  // Requests user permission
-  } else if (window.web3) {
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+  } else if(window.web3) {
     web3 = new Web3(window.web3.currentProvider);
   } else {
     web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
@@ -18,11 +18,11 @@ export const initWeb3 = async () => {
 };
 
 export const getAccounts = async () => {
-  if (!web3) await initWeb3();
+  if(!web3) await initWeb3();
   return await web3.eth.getAccounts();
 };
 
 export const getContract = async () => {
-  if (!contract) await initWeb3();
+  if(!contract) await initWeb3();
   return contract;
 };
